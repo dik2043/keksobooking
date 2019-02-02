@@ -68,7 +68,55 @@ var toSortArr = function (newArr, arr) {
 };
 
 // Генерируем весь массив
-/* Все целиком */
+/* Создаем пустую структуру объекта */
+
+var createEmptyStructure = function () {
+    for (var i = 0; i < counterSteps; i++) {
+        generatedObjs[i] = {};
+        generatedObjs[i].author = {};
+        generatedObjs[i].offer = {};
+        generatedObjs[i].location = {};
+    }
+};
+
+/* Заполняем author */
+
+var fillAuthorInObj = function (arr, avatars) {
+    for (var i = 0; i < counterSteps; i++) {
+        arr[i].author.avatar = avatars[i];
+    }
+};
+
+/* Заполняем location */
+
+var fillLocationInObjs = function (arr) {
+    for (var i = 0; i < counterSteps; i++) {
+        arr[i].location.x = getRandomNumber(0, mapPin.clientWidth);
+        arr[i].location.y = getRandomNumber(130, 630);
+    }
+};
+
+/* Заполняем offer */
+
+var fillOfferInObj = function (arr, title) {
+    for (var i = 0; i < counterSteps; i++) {
+        var photos = [];
+        var features = [];
+        toRecycleArr(features, featuresArr);
+        toSortArr(photos, photosArr);
+        arr[i].offer.title = title[i];
+        arr[i].offer.adress = arr[i].location.x + ', ' + arr[i].location.y;
+        arr[i].offer.price = getRandomNumber(1000, 1000000);
+        arr[i].offer.type = typeArr[getRandomNumber(0, typeArr.length - 1)];
+        arr[i].offer.rooms = getRandomNumber(1, 5);
+        arr[i].offer.guests = getRandomNumber(1, 25);
+        arr[i].offer.checkin = checkinAndCheckout[getRandomNumber(0, checkinAndCheckout.length - 1)];
+        arr[i].offer.checkout = checkinAndCheckout[getRandomNumber(0, checkinAndCheckout.length - 1)];
+        arr[i].offer.features = features;
+        arr[i].offer.descrription = '';
+        arr[i].offer.photos = photos;
+    }  
+};
 
 var createWholeObj = function (arr) {
     for (var i = 0; i < counterSteps; i++) {
@@ -97,10 +145,19 @@ var createWholeObj = function (arr) {
     }
 };
 
+/* Все целиком */
+
+var createObj = function() {
+    createEmptyStructure();                         /* создает пустую структуру объекта */
+    fillAuthorInObj(generatedObjs, avatars);        /* наполняет свойство author значениями avatar */
+    fillLocationInObjs(generatedObjs);              /* наполняет свойство location значениями x, y */
+    fillOfferInObj(generatedObjs, title);           /* наполняет свойство offer кучей всего */
+};
+
 createWholeObj(generatedObjs);
 console.log(generatedObjs);
 
 
 // заметки
- /* в консоли браузера свойства объекта идут не в том порядке (location перед offer),
+ /* свойства объекта идут не в том порядке (location перед offer),
  title идет не в случайном порядке */

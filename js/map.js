@@ -121,16 +121,17 @@ createWholeObj(generatedObjs);
 
 /* Создание похожих меток из template */
 
-var renderMapPin = function (obj) {
+var renderMapPin = function (obj, id) {
     var mapPin = similarMapPin.cloneNode(true);          /* все равно долбанутая */
     mapPin.style = 'left: ' + obj.location.x + 'px;' + 'top: ' + obj.location.y + 'px;';
     mapPin.querySelector('img').src = obj.author.avatar;
     mapPin.querySelector('img').alt = obj.offer.title;
-    
+    mapPin.dataset.offerId = id;        /* счетчик метки */
+
     return mapPin;
 };
 
-var renderMapCard = function (obj) {
+var renderMapCard = function (obj, id) {
     var fragmentImg = document.createDocumentFragment();        /* пустое ведро для фоток */
     var fragmentFeature = document.createDocumentFragment();        /* пустое ведро для особенностей */
     var mapCard = similarMapCard.cloneNode(true);    
@@ -168,6 +169,10 @@ var renderMapCard = function (obj) {
     }
     mapCard.querySelector('.popup__photos').appendChild(fragmentImg);
     mapCard.querySelector('img').src = obj.author.avatar;
+    mapCard.dataset.offerId = id;       /* счетчик карточки */
+    mapCard.querySelector('.popup__close').addEventListener('click', function (evt) {       /* обработчик закрытия */
+        closeMapCard();
+    });
     return mapCard;
 };
 
@@ -177,8 +182,8 @@ var fragmentCard = document.createDocumentFragment();
 
 /* Прикрепляем фрагмент с объявлением к верстке до map__filters-container */
 
-var createDOMCard = function (count) {
-    fragmentCard.appendChild(renderMapCard(generatedObjs[count]));
+var createDOMCard = function (count, id) {
+    fragmentCard.appendChild(renderMapCard(generatedObjs[count], id));
     map.insertBefore(fragmentCard, map.querySelector('.map__filters-container'));
 };
 
@@ -186,7 +191,7 @@ var createDOMCard = function (count) {
 
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < counterSteps; i++) {
-    fragment.appendChild(renderMapPin(generatedObjs[i]));
+    fragment.appendChild(renderMapPin(generatedObjs[i], i));
 }
 
 /* Прикрепляем фрагмент с метками к верстке */
@@ -194,9 +199,6 @@ for (var i = 0; i < counterSteps; i++) {
 var createDOMPins = function () {
     mapPins.appendChild(fragment);
 };
-
-// createDOMPins();
-// createDOMCard(2);
 
 
 // задание 4    задание 4    задание 4    задание 4    
@@ -234,7 +236,15 @@ var setCoordinats = function (elemIn, elemFrom) {
 };
 setCoordinats(adressInput, mapPinMain);
 
-/* Обработчик на главную метку карты */
+/* Закрытие окна объявления */
+
+var closeMapCard = function (evt) {
+    var mapCard = map.querySelector('.map__card');
+    map.removeChild(mapCard);
+    map.querySelector('.clickedPin').classList.remove('clickedPin');    /* удаление класса на кликнутой метке */
+};
+
+/* Получить активное состояние карты */
 
 var getActiveState = function (evt) {
     for (var i = 0; i < fieldsets.length; i ++) {
@@ -245,18 +255,75 @@ var getActiveState = function (evt) {
     }
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    console.log('активное состояние, поля работают');
+    createDOMPins();
+    console.log('active state');
 };
 
-mapPinMain.addEventListener('mouseup', function (evt) {
-   getActiveState(evt); 
+/* Обработчик на каждую метку на карте */
+
+var addListenerToEveryPin = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+        pins[i].addEventListener('click', function (evt) {
+            cardCreater(evt, pins);
+        });
+    }
+};
+
+/* Одна большая проверка на открытое объявление */
+
+var cardCreater = function (evt, pins) {
+    var clickedElem = evt.currentTarget;
+     var offerId = clickedElem.dataset.offerId;
+    var mapCard = map.querySelector('.map__card');
+    if (!clickedElem.classList.contains('map__pin--main')) {
+        if (!clickedElem.classList.contains('clickedPin') && mapCard) {
+            console.log('эл-т не содержит класс, но открыто окно, удалить все, открыть новое окно');
+            map.removeChild(mapCard);
+            for (i = 0; i < pins.length; i++) {
+                pin = pins[i];
+                pin.classList.remove('clickedPin');
+            }
+            clickedElem.classList.add('clickedPin');
+            createDOMCard(offerId);           
+            
+        } else if (clickedElem.classList.contains('clickedPin') && mapCard) {
+            console.log('эл-т содержит класс, и открыто окно, удалить все');
+            map.removeChild(mapCard);
+            for (var i = 0; i < pins.length; i++) {
+                var pin = pins[i];
+                pin.classList.remove('clickedPin');
+            }
+        } else if (!clickedElem.classList.contains('clickedPin')) {
+            console.log('эл-т не содержит класс, добаить, открыть окно');
+            clickedElem.classList.add('clickedPin');
+            createDOMCard(offerId);
+        }
+    }  
+};
+
+/* Повесить обработчик на главную метку */
+
+mapPinMain.addEventListener('mouseup', function (evt) {    
+    if (mapPinMain.classList.contains('clicked')) {
+        console.log('already');
+    } else {
+        getActiveState(evt);
+        addListenerToEveryPin();
+        mapPinMain.classList.add('clicked');
+    }
 });
 
 
-// задания
-// вернуть страницу в исходное состояиние, отключив отрисовку объявлений !
-// сделать неактивными поля форм (добавить через DOM-операции или самим полям или fieldset которые их содержат, атрибут disabled)!
-// 
+// весь алгоритм программы (условно)
+/* 1 задаем все переменный и функции для создания всего объекта */
+/* 2 генерируем из всего этого объект */
+/* 3 создаем по шаблонам renderMapPin и renderMapCard метки на карте BarProp окно объявления */
+/* 4 прикрепляем их renderMapCard верстке */
+ 
+/* 5 переводим страницу прикрепляем первом запуске в нективное состояние */
+/* 6 создаем обработчики на разные сценарии взаимодействия */
+/* 7 навешиваем обработчики на главную метку */
 
 
 // заметки
@@ -264,3 +331,22 @@ mapPinMain.addEventListener('mouseup', function (evt) {
  в консоли браузера свойства объекта идут не в том порядке (location перед offer),
  если взять больше восьми объектов, будет беда
  title идет не в случайном порядке */
+
+
+// var clickHandler = function (evt) {
+//     console.log(evt);
+//
+//     if(clickedElem) {
+//         clickedElem.classList.remove('clicked');
+//     }
+//
+//     clickedElem = evt.currentTarget;
+//     clickedElem.classList.add('clicked');
+// }
+// for (var i = 0; i < divElements.length; i++ ) {
+//     divElements[i].addEventListener('click', clickHandler);
+// }
+//
+// for (var i = 0; i < setupOpenIcon.length; i++ ) {
+//     setupOpenIcon[i].addEventListener('click', clickHandler);
+// }

@@ -1,5 +1,12 @@
-var mapPins = document.querySelector('.map__pins');
-var map = document.querySelector('.map');
+var mapPins = document.querySelector('.map__pins');     /* поле для всех меток карты */
+var mapPinMain = document.querySelector('.map__pin--main');     /* главная метка на карте */
+var map = document.querySelector('.map');  
+var fieldsets = document.querySelectorAll('.ad-form fieldset');     /* все поля под картой */
+var mapFilterSelects = document.querySelectorAll('.map__filters select');     /* селекты фильтра сразу под картой */
+var mapFilterFieldset = document.querySelector('.map__features');       /* фиелдсет фильтра сразу под картой */
+var adForm = document.querySelector('.ad-form');
+var adressInput = document.querySelector('.ad-form__element--wide input[name="address"]');
+
 var similarMapCard = document.querySelector('template')
     .content
     .querySelector('.map__card');
@@ -112,8 +119,6 @@ var createWholeObj = function (arr) {
 };
 createWholeObj(generatedObjs);
 
-map.classList.remove('map--faded');
-
 /* Создание похожих меток из template */
 
 var renderMapPin = function (obj) {
@@ -194,9 +199,64 @@ var createDOMPins = function () {
 // createDOMCard(2);
 
 
+// задание 4    задание 4    задание 4    задание 4    
+
+
+/* Отключаем все поля на странице */
+
+var getDisabledState = function () {
+    for (var i = 0; i < fieldsets.length; i++) {   
+        fieldsets[i].setAttribute('disabled', 'disabled');
+    }
+    for (i = 0; i < mapFilterSelects.length; i++) {
+        mapFilterSelects[i].setAttribute('disabled', 'disabled');
+        // mapFilters[i].querySelectorall()
+    }
+    mapFilterFieldset.setAttribute('disabled', 'disabled');
+    console.log('неактивное состояние, поля заблокированны');
+};
+getDisabledState();
+
+/* Получение координат элемента на странице */
+
+var getCoords = function (elem) {
+    var box = elem.getBoundingClientRect();
+    return {
+        top: box.top + pageYOffset,
+        left: box.left + pageXOffset
+    };
+};
+
+/* Добавляем координаты в поле адреса */
+
+var setCoordinats = function (elemIn, elemFrom) {
+    elemIn.value =  getCoords(elemFrom).left + ', ' + getCoords(elemFrom).top;
+};
+setCoordinats(adressInput, mapPinMain);
+
+/* Обработчик на главную метку карты */
+
+var getActiveState = function (evt) {
+    for (var i = 0; i < fieldsets.length; i ++) {
+        fieldsets[i].removeAttribute('disabled');
+    }
+    for (i = 0; i < mapFilterSelects.length; i ++) {
+        mapFilterSelects[i].removeAttribute('disabled');
+    }
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+    console.log('активное состояние, поля работают');
+};
+
+mapPinMain.addEventListener('mouseup', function (evt) {
+   getActiveState(evt); 
+});
+
+
 // задания
-// вернуть страницу в исходное состояиние, отключив отрисовку объявлений
-// сделать неактивными поля форм (добавить через DOM-операции или самим полям или fieldset которые их содержат, атрибут disabled)
+// вернуть страницу в исходное состояиние, отключив отрисовку объявлений !
+// сделать неактивными поля форм (добавить через DOM-операции или самим полям или fieldset которые их содержат, атрибут disabled)!
+// 
 
 
 // заметки

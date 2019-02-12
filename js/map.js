@@ -315,6 +315,8 @@ mapPinMain.addEventListener('mouseup', function (evt) {
 });
 
 
+
+
 // весь алгоритм программы (условно)
 /* 1 задаем все переменный и функции для создания всего объекта */
 /* 2 генерируем из всего этого объект */
@@ -331,22 +333,3 @@ mapPinMain.addEventListener('mouseup', function (evt) {
  в консоли браузера свойства объекта идут не в том порядке (location перед offer),
  если взять больше восьми объектов, будет беда
  title идет не в случайном порядке */
-
-
-// var clickHandler = function (evt) {
-//     console.log(evt);
-//
-//     if(clickedElem) {
-//         clickedElem.classList.remove('clicked');
-//     }
-//
-//     clickedElem = evt.currentTarget;
-//     clickedElem.classList.add('clicked');
-// }
-// for (var i = 0; i < divElements.length; i++ ) {
-//     divElements[i].addEventListener('click', clickHandler);
-// }
-//
-// for (var i = 0; i < setupOpenIcon.length; i++ ) {
-//     setupOpenIcon[i].addEventListener('click', clickHandler);
-// }

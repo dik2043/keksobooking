@@ -226,8 +226,8 @@ getDisabledState();
 var getCoords = function (elem) {
     var box = elem.getBoundingClientRect();
     return {
-        top: box.top + pageYOffset,
-        left: box.left + pageXOffset
+        top: box.top + pageYOffset + (mapPinMain.clientHeight + 22),
+        left: box.left + pageXOffset + (mapPinMain.clientWidth / 2 + 0.5)
     };
 };
 
@@ -236,6 +236,7 @@ var getCoords = function (elem) {
 var setCoordinats = function (elemIn, elemFrom) {
     elemIn.value =  getCoords(elemFrom).left + ', ' + getCoords(elemFrom).top;
 };
+
 setCoordinats(adressInput, mapPinMain);
 
 /* Закрытие окна объявления */
@@ -255,6 +256,7 @@ var getActiveState = function (evt) {
     for (i = 0; i < mapFilterSelects.length; i ++) {
         mapFilterSelects[i].removeAttribute('disabled');
     }
+    mapFilterFieldset.removeAttribute('disabled');
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     createDOMPins();
@@ -422,6 +424,58 @@ var checkGuestsAndRooms = function (evt) {
 };
 
 
+// Задание 5        Задание 5        Задание 5        Задание 5        Задание 5        
+
+/* Перетаскивание главной метки и установка адреса */
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+
+        var shift = {
+            x: startCoords.x - moveEvt.clientX,
+            y: startCoords.y - moveEvt.clientY
+        };
+
+        startCoords = {
+            x: moveEvt.clientX,
+            y: moveEvt.clientY
+        };
+
+        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';     /* изменяем положение в верстке */
+        mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';   
+
+        console.log(startCoords);
+        setCoordinats(adressInput, mapPinMain);
+        
+        if (mapPinMain.offsetTop >= 635) {      /* если метка на 635 или ниже*/
+            mapPinMain.style.top = '630px';
+            getActiveState();
+            map.removeEventListener('mousemove', onMouseMove);
+        } else if (mapPinMain.offsetTop <= 125) {       /* если метка на 125 или выше */
+            mapPinMain.style.top = '130px';
+            getActiveState();
+            map.removeEventListener('mousemove', onMouseMove);
+        } 
+    };
+
+    var onMouseUp = function (upEvt) {          /* удаление обработчиков по отпусканию мышки */
+        map.removeEventListener('mousemove', onMouseMove);
+        map.removeEventListener('mouseup', onMouseUp);
+    };
+
+    map.addEventListener('mousemove', onMouseMove);
+    map.addEventListener('mouseup', onMouseUp);
+});
+
+
 // весь алгоритм программы (условно)
 
 /* 1 задаем все переменный и функции для создания всего объекта */
@@ -429,10 +483,11 @@ var checkGuestsAndRooms = function (evt) {
 /* 3 создаем по шаблонам renderMapPin и renderMapCard метки на карте BarProp окно объявления */
 /* 4 прикрепляем их renderMapCard верстке */
  
-/* 5 переводим страницу прикрепляем первом запуске в нективное состояние */
+/* 5 переводим страницу при первом запуске в нективное состояние */
 /* 6 создаем обработчики на разные сценарии взаимодействия */
 /* 7 навешиваем обработчики на главную метку */
-/* 8 Проверяем все поля в форме объявления */
+/* 8 проверяем все поля в форме объявления */
+
 
 
 // заметки

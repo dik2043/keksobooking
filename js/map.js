@@ -1,3 +1,5 @@
+'use strict';
+
 var mapPins = document.querySelector('.map__pins');     /* поле для всех меток карты */
 var mapPinMain = document.querySelector('.map__pin--main');     /* главная метка на карте */
 var map = document.querySelector('.map');  
@@ -319,9 +321,9 @@ mapPinMain.addEventListener('mouseup', function (evt) {
 
 /* Проверка типа жилья */
 
-var selectType = document.querySelector('#type');
-var inputPrice = document.querySelector('#price');
-var inputTitle = document.querySelector('#title');
+var selectType = document.querySelector('#type');  /* тип жилья */
+var inputPrice = document.querySelector('#price');  /* окно цены */
+var inputTitle = document.querySelector('#title');  /* заголовок объявления */
 
 var showWrongSet = function (evt) {
     evt.target.style.border = '3px solid red';    
@@ -365,8 +367,8 @@ var checkFlat = function (evt) {
 
 /* Проверка времени заезда */
 
-var timeIn = document.querySelector('#timein');
-var timeOut = document.querySelector('#timeout');
+var timeIn = document.querySelector('#timein');  /* время заезда */
+var timeOut = document.querySelector('#timeout');  /* время выезда */
 
 timeIn.addEventListener('change', function (evt) {
     checkTimeIn(evt);
@@ -386,8 +388,8 @@ var checkTimeOut = function (evt) {
 
 /* Проверка гостей */
 
-var roomsQuantity = document.querySelector("#room_number");
-var guestsQuantity = document.querySelector("#capacity");
+var roomsQuantity = document.querySelector("#room_number");  /* количество комнта */
+var guestsQuantity = document.querySelector("#capacity");  /* количество гостей */
 guestsQuantity.value = '1';
 
 roomsQuantity.addEventListener('change', function (evt) {
@@ -421,6 +423,7 @@ var checkGuestsAndRooms = function (evt) {
 
 
 // весь алгоритм программы (условно)
+
 /* 1 задаем все переменный и функции для создания всего объекта */
 /* 2 генерируем из всего этого объект */
 /* 3 создаем по шаблонам renderMapPin и renderMapCard метки на карте BarProp окно объявления */

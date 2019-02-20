@@ -9,7 +9,6 @@
 
     /* Проверка типа жилья */
 
-
     var selectType = document.querySelector('#type');
     /* тип жилья */
     var inputPrice = document.querySelector('#price');
@@ -56,6 +55,7 @@
                 break;
         }
     };
+    
 
     /* Проверка времени заезда */
 
@@ -80,6 +80,7 @@
         timeIn.value = timeOut.value;
     };
 
+    
     /* Проверка гостей */
 
     var roomsQuantity = document.querySelector("#room_number");
@@ -116,5 +117,59 @@
             guestsQuantity.setCustomValidity('');
         }
     };
+
+    // Изменяем поведение при подтверждении формы
+
+    var onButtonPress = function (evt) {
+        successMessage.classList.add('hidden');
+    };
+    var onMousePress = function (evt) {
+        successMessage.classList.add('hidden');        
+    };
+
+    var hidePinsAndCard = function () {
+        // да пиздец в жопу эти лейблы красные
+        
+        // var allFeatures = document.querySelector('.ad-form__element--wide.features');
+        // var allFeaturesArr = allFeatures.querySelectorAll('input[type=checkbox]');
+        // var labelsArr = allFeatures.querySelectorAll('label');
+        // console.log(allFeaturesArr);
+        // for (var i = 0; i < allFeaturesArr.length; i++) {
+        //     allFeaturesArr[i].removeAttribute("checked");
+        //     labelsArr[i].style.backgroundColor = '';
+        // }           
+        var formDescription = document.querySelector('#description');
+        formDescription.value = '';
+        var mapPinElems = document.querySelectorAll('.map__pin');
+        for (var i = 0; i < mapPinElems.length; i++) {
+            mapPinElems[i].classList.add('hidden');
+        }
+        var mapPinMain = document.querySelector('.map__pin--main');
+        mapPinMain.classList.remove('hidden');
+        var mapCard = window.map.map.querySelector('.map__card');
+        if (window.map.map.contains(mapCard)) {
+            window.map.map.removeChild(mapCard);
+        }
+        roomsQuantity.value = '1';
+        guestsQuantity.value = '1';
+        timeIn.value = '12:00';
+        timeOut.value = '12:00';
+        selectType.value = 'flat';
+        inputPrice.value = '';
+        inputTitle.value = '';
+        window.map.getDisabledState();
+    };
+    
+    var successMessage = document.querySelector('.success');
+    
+    window.map.adForm.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        window.backend.save(new FormData(window.map.adForm), function () {            
+            successMessage.classList.remove('hidden');
+        });
+        hidePinsAndCard();
+        successMessage.addEventListener('click', onMousePress);
+        successMessage.addEventListener('keydown', onButtonPress);
+    })
 
 })();

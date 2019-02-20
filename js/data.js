@@ -6,7 +6,7 @@
 
     window.data = {
         generatedObjs: [],
-        counterSteps: 8,
+        // counterSteps: 8,
         mapPins: document.querySelector('.map__pins')   /* поле для всех меток карты */
     };
     

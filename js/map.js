@@ -5,56 +5,37 @@
 (function () {
 
     window.map = {
-        map: document.querySelector('.map')
+        map: document.querySelector('.map'),
+        adForm: document.querySelector('.ad-form'),    /* Большая форма объявления */
+        /* как получить неактивное состоянии страницы */
+        getDisabledState: function () {
+            for (var i = 0; i < fieldsets.length; i++) {
+                fieldsets[i].setAttribute('disabled', 'disabled');
+            }
+            for (i = 0; i < mapFilterSelects.length; i++) {
+                mapFilterSelects[i].setAttribute('disabled', 'disabled');
+            }
+            mapFilterFieldset.setAttribute('disabled', 'disabled');
+            window.map.map.classList.add('map--faded');
+            window.map.adForm.classList.add('ad-form--disabled');
+            mapPinMain.classList.remove('clicked');
+            // window.cardAndPin.createDOMPins();      /* создаем метки по данным с сервера */
+            console.log('неактивное состояние, поля заблокированны');
+        }
     };
 
+
     var mapPinMain = document.querySelector('.map__pin--main');    /* главная метка на карте */
-    // var map = document.querySelector('.map');   /* !! */
     var fieldsets = document.querySelectorAll('.ad-form fieldset');    /* все поля под картой */
     var mapFilterSelects = document.querySelectorAll('.map__filters select');    /* селекты фильтра сразу под картой */
     var mapFilterFieldset = document.querySelector('.map__features');    /* фиелдсет фильтра сразу под картой */
-    var adForm = document.querySelector('.ad-form');    /* Большая форма объявления */
     var adressInput = document.querySelector('.ad-form__element--wide input[name="address"]');
+ 
 
+    /* делаем неактивное состояние */
+    window.map.getDisabledState();
 
-    // задание 4    задание 4    задание 4    задание 4    
-
-
-    /* Отключаем все поля на странице */
-
-    var getDisabledState = function () {
-        for (var i = 0; i < fieldsets.length; i++) {
-            fieldsets[i].setAttribute('disabled', 'disabled');
-        }
-        for (i = 0; i < mapFilterSelects.length; i++) {
-            mapFilterSelects[i].setAttribute('disabled', 'disabled');
-        }
-        mapFilterFieldset.setAttribute('disabled', 'disabled');
-        console.log('неактивное состояние, поля заблокированны');
-    };
-    getDisabledState();
-
-    /* Получение координат элемента на странице */
-
-    var getCoords = function (elem) {
-        var box = elem.getBoundingClientRect();
-        return {
-            top: box.top + pageYOffset + (mapPinMain.clientHeight + 22),
-            left: box.left + pageXOffset + (mapPinMain.clientWidth / 2 + 0.5)
-        };
-    };
-
-    /* Добавляем координаты в поле адреса */
-
-    var setCoordinats = function (elemIn, elemFrom) {
-        elemIn.value = getCoords(elemFrom).left + ', ' + getCoords(elemFrom).top;
-    };
-
-    setCoordinats(adressInput, mapPinMain);
-
-
-    /* Получить активное состояние карты */
-
+    /* как получить активное состояние карты */
     var getActiveState = function (evt) {
         for (var i = 0; i < fieldsets.length; i++) {
             fieldsets[i].removeAttribute('disabled');
@@ -64,24 +45,28 @@
         }
         mapFilterFieldset.removeAttribute('disabled');
         window.map.map.classList.remove('map--faded');
-        adForm.classList.remove('ad-form--disabled');
-        window.cardAndPin.createDOMPins();
-        console.log('active state');
+        window.map.adForm.classList.remove('ad-form--disabled');
+        window.cardAndPin.createDOMPins();      /* создаем метки по данным с сервера */
+        console.log('активное состояние, все доступно');
     };
 
-    /* Обработчик на каждую метку на карте */
-
-    var addListenerToEveryPin = function () {
-        var pins = document.querySelectorAll('.map__pin');
-        for (var i = 0; i < pins.length; i++) {
-            pins[i].addEventListener('click', function (evt) {
-                cardCreater(evt, pins);
-            });
-        }
+    /* как получить координаты элемента на странице */
+    var getCoords = function (elem) {
+        var box = elem.getBoundingClientRect();
+        return {
+            top: box.top + pageYOffset + (mapPinMain.clientHeight + 22),
+            left: box.left + pageXOffset + (mapPinMain.clientWidth / 2 + 0.5)
+        };
     };
 
-    /* Одна большая проверка на открытое объявление */
+    /* как добавить координаты в поле адреса */
+    var setCoordinats = function (elemIn, elemFrom) {
+        elemIn.value = getCoords(elemFrom).left + ', ' + getCoords(elemFrom).top;
+    };
+    /* сразу добавляем координаты */
+    setCoordinats(adressInput, mapPinMain);
 
+    /* как показывать  и проверять объявление */
     var cardCreater = function (evt, pins) {
         var clickedElem = evt.currentTarget;
         var offerId = clickedElem.dataset.offerId;
@@ -112,23 +97,29 @@
         }
     };
 
-    /* Повесить обработчик на главную метку */
+    /* как добавить обработчик создания объявления на каждую метку на карте */
+    var addListenerToEveryPin = function () {
+        var pins = document.querySelectorAll('.map__pin');
+        for (var i = 0; i < pins.length; i++) {
+            pins[i].addEventListener('click', function (evt) {
+                cardCreater(evt, pins);
+            });
+        }
+    };
 
+    /* добавляем обработчик на главную метку */
     mapPinMain.addEventListener('mouseup', function (evt) {
         if (mapPinMain.classList.contains('clicked')) {
             console.log('already');
         } else {
+            // disabled = false;
             getActiveState(evt);
             addListenerToEveryPin();
             mapPinMain.classList.add('clicked');
         }
     });
-
-
-    // Задание 5        Задание 5        Задание 5        Задание 5        Задание 5        
-
-    /* Перетаскивание главной метки и установка адреса */
-
+    
+    /* добавляем обработчик перемещения метки (сразу с объявлением) */
     mapPinMain.addEventListener('mousedown', function (evt) {
         evt.preventDefault();
 
@@ -198,4 +189,6 @@
  в консоли браузера свойства объекта идут не в том порядке (location перед offer),
  если взять больше восьми объектов, будет беда
  title идет не в случайном порядке 
- А как потом убрать красную рамку с неправильных полей?*/
+ А как потом убрать красную рамку с неправильных полей?
+ как сбросить значение полей формы на стандартные?Г? */
+

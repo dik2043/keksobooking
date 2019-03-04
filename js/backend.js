@@ -17,8 +17,7 @@
             var error;
             switch (xhr.status) {
                 case 200:
-                    onLoad(xhr.response);  
-                    console.log(xhr.response);   /* передать в onLoad значение ответа с сервера */
+                    onLoad(xhr.response);  /* передать в onLoad значение ответа с сервера */
                     break;
 
                 case 400:

@@ -129,15 +129,7 @@
 
     var hidePinsAndCard = function () {
         // да пиздец в жопу эти лейблы красные
-        
-        // var allFeatures = document.querySelector('.ad-form__element--wide.features');
-        // var allFeaturesArr = allFeatures.querySelectorAll('input[type=checkbox]');
-        // var labelsArr = allFeatures.querySelectorAll('label');
-        // console.log(allFeaturesArr);
-        // for (var i = 0; i < allFeaturesArr.length; i++) {
-        //     allFeaturesArr[i].removeAttribute("checked");
-        //     labelsArr[i].style.backgroundColor = '';
-        // }           
+       
         var formDescription = document.querySelector('#description');
         formDescription.value = '';
         var mapPinElems = document.querySelectorAll('.map__pin');

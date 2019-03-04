@@ -4,7 +4,7 @@
 
 (function () {
     
-    var mapPins = document.querySelector('.map__pins');
+    // var mapPins = document.querySelector('.map__pins');
     var similarMapCard = document.querySelector('template')
         .content
         .querySelector('.map__card');
@@ -74,7 +74,7 @@
             closeMapCard();
         });
         return mapCard;
-    };        
+    };
 
     /* как закрыть окно объявления */
     var closeMapCard = function () {
@@ -85,9 +85,13 @@
     
     
     // Отрисовываем метки по полученным данным 
-
+    
+    
+var fragment = document.createDocumentFragment();
     window.backend.load(function (mapData) {
         window.cardAndPin = {
+            // fragment: document.createDocumentFragment(),
+            
             createDOMCard: function (count, id) {    /* mapCard - это параметр колбэка, данные с сервера */
                 /* создаем пустое ведро и прикрепляем к нему объявление */
                 var fragmentCard = document.createDocumentFragment();
@@ -98,13 +102,14 @@
 
             createDOMPins: function () {
                 /* прикрепляем фрагмент с метками к разметке */
-                var fragment = document.createDocumentFragment();
+                // var fragment = document.createDocumentFragment();
                 for (var i = 0; i < mapData.length; i++) {
                     fragment.appendChild(renderMapPin(mapData[i], i));
                 }
-                mapPins.appendChild(fragment);
-            }
-        };
-    });
+                window.sorting.mapPins.appendChild(fragment);
+            },
+            cards: mapData
+        }
+    });   
     
 })();

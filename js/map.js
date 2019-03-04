@@ -112,7 +112,6 @@
         if (mapPinMain.classList.contains('clicked')) {
             console.log('already');
         } else {
-            // disabled = false;
             getActiveState(evt);
             addListenerToEveryPin();
             mapPinMain.classList.add('clicked');
@@ -144,8 +143,7 @@
             mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
             /* изменяем положение в верстке */
             mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
-
-            console.log(startCoords);
+            
             setCoordinats(adressInput, mapPinMain);
 
             if (mapPinMain.offsetTop >= 635) {      /* если метка на 635 или ниже*/

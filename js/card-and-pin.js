@@ -14,14 +14,17 @@
     
 
     /* как рендерить пин на карте */
-    var renderMapPin = function (obj, id) {
-        var mapPin = similarMapPin.cloneNode(true);          /* все равно долбанутая */
-        mapPin.style = 'left: ' + obj.location.x + 'px;' + 'top: ' + obj.location.y + 'px;';
-        mapPin.querySelector('img').src = obj.author.avatar;
-        mapPin.querySelector('img').alt = obj.offer.title;
-        mapPin.dataset.offerId = id;        /* счетчик метки */
+    window.render = {
+        renderMapPin: function (obj, id) {
+            var mapPin = similarMapPin.cloneNode(true);
+            /* все равно долбанутая */
+            mapPin.style = 'left: ' + obj.location.x + 'px;' + 'top: ' + obj.location.y + 'px;';
+            mapPin.querySelector('img').src = obj.author.avatar;
+            mapPin.querySelector('img').alt = obj.offer.title;
+            mapPin.dataset.offerId = id;    /* счетчик метки */
 
-        return mapPin;
+            return mapPin;
+        }
     };
 
     /* как рендерить открытое объявление */
@@ -87,7 +90,7 @@
     // Отрисовываем метки по полученным данным 
     
     
-var fragment = document.createDocumentFragment();
+    window.render.fragment = document.createDocumentFragment();
     window.backend.load(function (mapData) {
         window.cardAndPin = {
             // fragment: document.createDocumentFragment(),
@@ -104,9 +107,9 @@ var fragment = document.createDocumentFragment();
                 /* прикрепляем фрагмент с метками к разметке */
                 // var fragment = document.createDocumentFragment();
                 for (var i = 0; i < mapData.length; i++) {
-                    fragment.appendChild(renderMapPin(mapData[i], i));
+                    window.render.fragment.appendChild(window.render.renderMapPin(mapData[i], i));
                 }
-                window.sorting.mapPins.appendChild(fragment);
+                window.sorting.mapPins.appendChild(window.render.fragment);
             },
             cards: mapData
         }

@@ -21,6 +21,15 @@
             mapPinMain.classList.remove('clicked');
             // window.cardAndPin.createDOMPins();      /* создаем метки по данным с сервера */
             console.log('неактивное состояние, поля заблокированны');
+        },
+        /* как добавить обработчик создания объявления на каждую метку на карте */
+        addListenerToEveryPin: function () {
+            var pins = document.querySelectorAll('.map__pin');
+            for (var i = 0; i < pins.length; i++) {
+                pins[i].addEventListener('click', function (evt) {
+                    cardCreater(evt, pins);
+                });
+            }
         }
     };
 
@@ -66,7 +75,7 @@
     /* сразу добавляем координаты */
     setCoordinats(adressInput, mapPinMain);
 
-    /* как показывать  и проверять объявление */
+    /* как показывать и проверять объявление */
     var cardCreater = function (evt, pins) {
         var clickedElem = evt.currentTarget;
         var offerId = clickedElem.dataset.offerId;
@@ -81,6 +90,7 @@
                 }
                 clickedElem.classList.add('clickedPin');
                 window.cardAndPin.createDOMCard(offerId);
+                console.log(offerId);
 
             } else if (clickedElem.classList.contains('clickedPin') && mapCard) {
                 console.log('эл-т содержит класс, и открыто окно, удалить все');
@@ -89,23 +99,25 @@
                     var pin = pins[i];
                     pin.classList.remove('clickedPin');
                 }
+                console.log(offerId);
             } else if (!clickedElem.classList.contains('clickedPin')) {
                 console.log('эл-т не содержит класс, добаить, открыть окно');
                 clickedElem.classList.add('clickedPin');
                 window.cardAndPin.createDOMCard(offerId);
+                console.log(offerId);
             }
         }
     };
 
     /* как добавить обработчик создания объявления на каждую метку на карте */
-    var addListenerToEveryPin = function () {
-        var pins = document.querySelectorAll('.map__pin');
-        for (var i = 0; i < pins.length; i++) {
-            pins[i].addEventListener('click', function (evt) {
-                cardCreater(evt, pins);
-            });
-        }
-    };
+    // var addListenerToEveryPin = function () {
+    //     var pins = document.querySelectorAll('.map__pin');
+    //     for (var i = 0; i < pins.length; i++) {
+    //         pins[i].addEventListener('click', function (evt) {
+    //             cardCreater(evt, pins);
+    //         });
+    //     }
+    // };
 
     /* добавляем обработчик на главную метку */
     mapPinMain.addEventListener('mouseup', function (evt) {
@@ -113,7 +125,7 @@
             console.log('already');
         } else {
             getActiveState(evt);
-            addListenerToEveryPin();
+            window.map.addListenerToEveryPin();
             mapPinMain.classList.add('clicked');
         }
     });

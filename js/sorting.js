@@ -1,6 +1,6 @@
 'use strict';
 
-// Файл отвечает за сортировку похожих объясвлений
+// Файл отвечает за сортировку похожих объявлений
 
 (function () {
     
@@ -52,8 +52,6 @@
         });
 
 
-
-
         var filtredFeatures = Array.from(featuresCheckbox).filter(function (value) {
             return value.checked;
         });
@@ -65,15 +63,10 @@
                 var strCheck = filtredFeatures[i].id.substr(7);
                 on = on && issetFeatures(strCheck, card.offer.features);
             }
-            //console.log(on);
             return on;
         });
-
-
-
-
     };
- 
+    
 
     var deleteDOMPins = function () {
         var allPins = document.querySelectorAll('.map__pin');
@@ -100,8 +93,6 @@
             } 
         });*/
     });
-    
-
 })();
 
 

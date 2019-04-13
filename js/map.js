@@ -10,7 +10,7 @@
         /* как получить неактивное состоянии страницы */
         getDisabledState: function () {
             for (var i = 0; i < fieldsets.length; i++) {
-                fieldsets[i].setAttribute('disabled', 'disabled');
+                fieldsets[i].setAttribute('disabled', 'disabled'); 
             }
             for (i = 0; i < mapFilterSelects.length; i++) {
                 mapFilterSelects[i].setAttribute('disabled', 'disabled');
@@ -33,7 +33,7 @@
         }
     };
 
-
+    
     var mapPinMain = document.querySelector('.map__pin--main');    /* главная метка на карте */
     var fieldsets = document.querySelectorAll('.ad-form fieldset');    /* все поля под картой */
     var mapFilterSelects = document.querySelectorAll('.map__filters select');    /* селекты фильтра сразу под картой */

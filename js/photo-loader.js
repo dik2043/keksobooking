@@ -11,10 +11,8 @@
         
         var matches = FILE_TYPES.some(function (it) {   /*some начинает цикл по массиву FILE_TYPES 
                                                          (it - каждый элемент массива)*/
-            console.log(it);
             return fileName.endsWith(it);         /*проверяет, заканчивается ли fileName на it (true или false)*/   
         });
-        console.log(matches);
         
         if (matches) {
             var reader = new FileReader();  

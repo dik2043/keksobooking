@@ -14,7 +14,7 @@
     var guestsFiled = document.getElementById('housing-guests');
     var featuresFiled = document.getElementById('housing-features');
     var featuresLabels = featuresFiled.querySelectorAll('.map__feature');
-    var featuresCheckbox = featuresFiled.querySelectorAll('.map__checkbox');
+    var featuresCheckbox = featuresFiled.querySelectorAll('.map__checkbox');    /* массив чекбоксов */
 
     //var filterDishwasher = document.getElementById('filter-dishwasher').checked;
     //console.log(filterDishwasher);
@@ -76,6 +76,17 @@
         }
         window.sorting.mapPins.appendChild(mainPin);
     };
+
+
+    /* проверяет, входит ли строка в массив строк */
+    function issetFeatures(strCheck, arrCard) {     /* arrCard - массив features каждой отдельной карточки */
+        for (var i = 0; i < arrCard.length; i++) {
+            if (arrCard[i] == strCheck) {       /* strCheck - выбранные чекбоксы */
+                return true;
+            }
+        }
+        return false;
+    }
     
 
     mapFilters.addEventListener('change', function (evt) {
@@ -87,20 +98,6 @@
         }
         window.sorting.mapPins.appendChild(window.render.fragment);
         window.map.addListenerToEveryPin();
-        /*var filtredFeatures = Array.from(featuresCheckbox).filter(function (value) {
-            if (value.checked) {
-                return value;
-            } 
-        });*/
     });
+    
 })();
-
-
-function issetFeatures(strCheck, arrCard) {
-    for (var i = 0; i < arrCard.length; i++) {
-        if (arrCard[i] == strCheck) {
-            return true;
-        }
-    }
-    return false;
-}
